@@ -1,14 +1,483 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reusable Dropdown</title>
+  <style>
+    .dropdown {
+      position: relative;
+      display: inline-block;
+      margin: 20px;
+    }
+
+    .dropdown-btn {
+      padding: 10px 15px;
+      cursor: pointer;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: white;
+      min-width: 160px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      z-index: 1;
+    }
+
+    .dropdown-content a {
+      display: block;
+      padding: 10px;
+      text-decoration: none;
+      color: black;
+    }
+
+    .dropdown-content a:hover {
+      background: #f0f0f0;
+    }
+
+    /* visible class for toggling */
+    .visible {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+   //First Dropdown 
+  <div class="dropdown">
+    <button class="dropdown-btn">Menu 1</button>
+    <div class="dropdown-content">
+      <a href="#">Edit</a>
+      <a href="#">Copy</a>
+      <a href="#">Delete</a>
+    </div>
+  </div>
+
+   //Second Dropdown 
+  <div class="dropdown">
+    <button class="dropdown-btn">Menu 2</button>
+    <div class="dropdown-content">
+      <a href="#">Profile</a>
+      <a href="#">Settings</a>
+      <a href="#">Logout</a>
+    </div>
+  </div>
+
+  <script>
+    // Reusable Dropdown Logic
+    document.querySelectorAll(".dropdown-btn").forEach(button => {
+      button.addEventListener("click", () => {
+        const dropdown = button.nextElementSibling;
+
+        // Close other dropdowns
+        document.querySelectorAll(".dropdown-content").forEach(content => {
+          if (content !== dropdown) {
+            content.classList.remove("visible");
+          }
+        });
+
+        // Toggle current dropdown
+        dropdown.classList.toggle("visible");
+      });
+    });
+
+    // Close dropdowns if clicked outside
+    window.addEventListener("click", (e) => {
+      if (!e.target.matches(".dropdown-btn")) {
+        document.querySelectorAll(".dropdown-content").forEach(content => {
+          content.classList.remove("visible");
+        });
+      }
+    });
+  </script>
+
+</body>
+</html> -->
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Carousel</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #f4f4f4;
+      margin: 0;
+    }
+
+    .carousel {
+      position: relative;
+      width: 600px;
+      height: 350px;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .slides {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .slide {
+      min-width: 100%;
+      height: 100%;
+    }
+
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Arrows */
+    .prev, .next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 50%;
+    }
+
+    .prev { left: 10px; }
+    .next { right: 10px; }
+
+    /* Navigation dots */
+    .dots {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #bbb;
+      cursor: pointer;
+    }
+
+    .dot.active {
+      background: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="carousel">
+    <div class="slides">
+      <div class="slide"><img src="https://picsum.photos/id/1015/600/350" alt="Slide 1"></div>
+      <div class="slide"><img src="https://picsum.photos/id/1016/600/350" alt="Slide 2"></div>
+      <div class="slide"><img src="https://picsum.photos/id/1018/600/350" alt="Slide 3"></div>
+      <div class="slide"><img src="https://picsum.photos/id/1020/600/350" alt="Slide 4"></div>
+    </div>
+    <button class="prev">&#10094;</button>
+    <button class="next">&#10095;</button>
+    <div class="dots"></div>
+  </div>
+
+  <script>
+    const slides = document.querySelector(".slides");
+    const slideElements = document.querySelectorAll(".slide");
+    const prevBtn = document.querySelector(".prev");
+    const nextBtn = document.querySelector(".next");
+    const dotsContainer = document.querySelector(".dots");
+
+    let currentIndex = 0;
+    let totalSlides = slideElements.length;
+    let autoSlide;
+
+    // Create dots
+    for (let i = 0; i < totalSlides; i++) {
+      const dot = document.createElement("div");
+      dot.classList.add("dot");
+      if (i === 0) dot.classList.add("active");
+      dot.addEventListener("click", () => goToSlide(i));
+      dotsContainer.appendChild(dot);
+    }
+
+    const dots = document.querySelectorAll(".dot");
+
+    function showSlide(index) {
+      slides.style.transform = `translateX(${-index * 100}%)`;
+      dots.forEach(dot => dot.classList.remove("active"));
+      dots[index].classList.add("active");
+      currentIndex = index;
+    }
+
+    function nextSlide() {
+      let index = (currentIndex + 1) % totalSlides;
+      showSlide(index);
+    }
+
+    function prevSlide() {
+      let index = (currentIndex - 1 + totalSlides) % totalSlides;
+      showSlide(index);
+    }
+
+    function goToSlide(index) {
+      showSlide(index);
+      resetAutoSlide();
+    }
+
+    prevBtn.addEventListener("click", () => {
+      prevSlide();
+      resetAutoSlide();
+    });
+
+    nextBtn.addEventListener("click", () => {
+      nextSlide();
+      resetAutoSlide();
+    });
+
+    function startAutoSlide() {
+      autoSlide = setInterval(nextSlide, 5000);
+    }
+
+    function resetAutoSlide() {
+      clearInterval(autoSlide);
+      startAutoSlide();
+    }
+
+    // Initialize
+    startAutoSlide();
+  </script>
+</body>
+</html> -->
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Validation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    form {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      width: 300px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .form-control {
+      margin-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-control label {
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .form-control input {
+      padding: 8px;
+      border: 2px solid #ccc;
+      border-radius: 5px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .form-control input:invalid {
+      border-color: red;
+    }
+
+    .form-control input:valid {
+      border-color: green;
+    }
+
+    .error {
+      color: red;
+      font-size: 12px;
+      display: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #45a049;
+    }
+
+    .success {
+      text-align: center;
+      font-size: 18px;
+      color: green;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <form id="myForm" novalidate>
+    <h2>Form</h2>
+
+    <div class="form-control">
+      <label>Email</label>
+      <input type="email" id="email" required>
+      <span class="error">Please enter a valid email.</span>
+    </div>
+
+    <div class="form-control">
+      <label>Country</label>
+      <input type="text" id="country" required>
+      <span class="error">Country is required.</span>
+    </div>
+
+    <div class="form-control">
+      <label>Postal Code</label>
+      <input type="text" id="postal" pattern="\\d{5}" required>
+      <span class="error">Enter a valid 5-digit postal code.</span>
+    </div>
+
+    <div class="form-control">
+      <label>Password</label>
+      <input type="password" id="password" minlength="6" required>
+      <span class="error">Password must be at least 6 characters.</span>
+    </div>
+
+    <div class="form-control">
+      <label>Confirm Password</label>
+      <input type="password" id="confirmPassword" required>
+      <span class="error">Passwords do not match.</span>
+    </div>
+
+    <button type="submit">Submit</button>
+    <p class="success">🙌 High Five! Form Submitted!</p>
+  </form>
+
+  <script>
+    const form = document.getElementById("myForm");
+    const email = document.getElementById("email");
+    const country = document.getElementById("country");
+    const postal = document.getElementById("postal");
+    const password = document.getElementById("password");
+    const confirmPassword = document.getElementById("confirmPassword");
+    const successMessage = document.querySelector(".success");
+
+    const inputs = [email, country, postal, password, confirmPassword];
+
+    function validateInput(input) {
+      const error = input.nextElementSibling;
+
+      if (!input.validity.valid) {
+        error.style.display = "block";
+        return false;
+      }
+
+      if (input.id === "confirmPassword" && input.value !== password.value) {
+        error.textContent = "Passwords do not match.";
+        error.style.display = "block";
+        return false;
+      }
+
+      error.style.display = "none";
+      return true;
+    }
+
+    inputs.forEach(input => {
+      input.addEventListener("input", () => validateInput(input));
+      input.addEventListener("blur", () => validateInput(input));
+    });
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      let valid = true;
+
+      inputs.forEach(input => {
+        if (!validateInput(input)) valid = false;
+      });
+
+      if (valid) {
+        successMessage.style.display = "block";
+        form.reset();
+        inputs.forEach(input => input.style.borderColor = "#ccc"); // reset borders
+      } else {
+        successMessage.style.display = "none";
+      }
+    });
+  </script>
+</body>
+</html> -->
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style1.css">
-    <title>Ruff-Work</title>
+  <meta charset="UTF-8">
+  <title>Fetch Giphy Example</title>
 </head>
 <body>
-    
-     <script type="module" src="./one.js" ></script> 
-     <script type="module" src="./two.js" ></script>
+  <h2>Random Cat GIF 🐱</h2>
+  <img src="#" alt="Random Cat GIF" width="400">
+  
+  <script>
+    const img = document.querySelector('img');
+    const apiKey = "YOUR_API_KEY_HERE"; // અહીં તમારી Giphy API Key નાખો
+
+    fetch(`https://api.giphy.com/v1/gifs/translate?api_key=${apiKey}&s=cats`)
+      .then(function(response) {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(function(response) {
+        console.log(response); // આખો object console માં ચેક કરવા
+        img.src = response.data.images.original.url; // GIF બતાવવા
+      })
+      .catch(function(error) {
+        console.error("Error fetching GIF:", error);
+        img.alt = "Could not load GIF 😢 (check API key)";
+      });
+  </script>
 </body>
 </html>
